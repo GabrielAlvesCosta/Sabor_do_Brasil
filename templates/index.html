@@ -482,7 +482,29 @@
 
         if (resposta.ok) {
           const el = document.getElementById(`comentario-${comentarioId}`);
-          if (el) el.remove();
+          if (el) {
+            // Acha de qual receita é esse comentário antes de excluí-lo da tela
+            const secaoComentarios = el.closest('.secao-comentarios');
+            
+            // Remove o comentário da tela
+            el.remove();
+
+            // Atualiza o número do balãozinho para diminuir 1
+            if (secaoComentarios) {
+              const receitaId = secaoComentarios.id.split('-')[1];
+              const cardReceita = document.querySelector(`.card-receita[data-id="${receitaId}"]`);
+              if (cardReceita) {
+                const btnComentar = cardReceita.querySelector(".btn-comentar");
+                if (btnComentar) {
+                  let textoBotao = btnComentar.textContent.replace('💬', '').trim();
+                  let totalAtual = parseInt(textoBotao) || 0;
+                  if (totalAtual > 0) {
+                    btnComentar.textContent = `💬 ${totalAtual - 1}`;
+                  }
+                }
+              }
+            }
+          }
         } else {
           alert(dados.erro || "Erro ao excluir comentário.");
         }
