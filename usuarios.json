@@ -64,12 +64,6 @@
           "autor_id": 4,
           "autor_nickname": "c",
           "texto": "c"
-        },
-        {
-          "id": 13,
-          "autor_id": 3,
-          "autor_nickname": "b",
-          "texto": "a"
         }
       ]
     },
