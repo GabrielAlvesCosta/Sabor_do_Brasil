@@ -64,7 +64,7 @@
               class="btn-comentar"
               onclick="toggleComentarios({{ receita.id }})"
             >
-              💬 {{ receita.comentarios | length }}
+              💬 <span id="balao-comentarios-{{ receita.id }}">{{ receita.comentarios | length }}</span>
             </button>
           </div>
         </div>
@@ -100,7 +100,7 @@
                 </button>
               <button
                 class="btn btn-perigo"
-                onclick="excluirComentario({{ comentario.id }})"
+                onclick="excluirComentario({{ comentario.id }}, {{ receita.id }})"
                 title="Excluir comentário"
               >
                 🗑
@@ -253,7 +253,6 @@
       const nickname = document.getElementById("login-nickname").value.trim();
       const senha    = document.getElementById("login-senha").value.trim();
 
-      // ===================== TODO (FRONTEND) =====================
       let temErro = false;
       if (!nickname) {
         document.getElementById("login-nickname").classList.add("campo-erro");
@@ -263,8 +262,7 @@
         document.getElementById("login-senha").classList.add("campo-erro");
         temErro = true;
       }
-      if (temErro) return; // Interrompe se houver campos vazios
-      // ===========================================================
+      if (temErro) return;
 
       try {
         const resposta = await fetch("/login", {
@@ -276,21 +274,18 @@
         const dados = await resposta.json();
 
         if (!resposta.ok) {
-          // ===================== TODO (FRONTEND) =====================
           document.getElementById("texto-erro-login").textContent = dados.erro;
           document.getElementById("erro-login").classList.add("visivel");
           document.getElementById("login-nickname").classList.add("campo-erro");
           document.getElementById("login-senha").classList.add("campo-erro");
-          // ===========================================================
           console.error("Erro no login:", dados.erro);
           return;
         }
 
-        // Login bem-sucedido
         usuarioAtual = dados.usuario;
         atualizarHeader();
         fecharModal();
-        location.reload(); // Recarrega para refletir permissões de exclusão no Jinja2
+        location.reload(); 
 
       } catch (e) {
         console.error("Erro de comunicação:", e);
@@ -316,17 +311,14 @@
         const dados = await resposta.json();
 
         if (!resposta.ok) {
-          // ===================== TODO (FRONTEND) =====================
           document.getElementById("texto-erro-cadastro").textContent = dados.erro;
           document.getElementById("erro-cadastro").classList.add("visivel");
           document.getElementById("cadastro-nickname").classList.add("campo-erro");
           document.getElementById("cadastro-senha").classList.add("campo-erro");
-          // ===========================================================
           console.error("Erro no cadastro:", dados.erro);
           return;
         }
 
-        // Sucesso: mostra mensagem e troca para aba de login
         const sucesso = document.getElementById("sucesso-cadastro");
         sucesso.textContent = "✅ " + dados.mensagem + " Faça seu login!";
         sucesso.classList.add("visivel");
@@ -352,9 +344,7 @@
     // ─── Curtir ────────────────────────────────────────────────────────────
     async function curtir(receitaId, botao) {
       if (!usuarioAtual) {
-        // ===================== TODO (FRONTEND) =====================
         abrirModal("login");
-        // ===========================================================
         return;
       }
 
@@ -375,9 +365,7 @@
     // ─── Toggle comentários ────────────────────────────────────────────────
     function toggleComentarios(receitaId) {
       if (!usuarioAtual) {
-        // ===================== TODO (FRONTEND) =====================
         abrirModal("login");
-        // ===========================================================
         return;
       }
       const secao = document.getElementById(`comentarios-${receitaId}`);
@@ -405,12 +393,11 @@
           input.value = "";
           const lista = document.getElementById(`lista-${receitaId}`);
           
-          // Cria o novo elemento na tela dinamicamente
           const novoItem = document.createElement("div");
           novoItem.classList.add("item-comentario");
           novoItem.id = `comentario-${dados.comentario.id}`;
           
-          // CORREÇÃO 1: Adicionado o botão de editar junto com o de excluir
+          // 🔴 AJUSTE: Passando receitaId no botão da lixeira para não dar erro ao apagar em seguida
           novoItem.innerHTML = `
             <div>
               <div class="comentario-autor">@${dados.comentario.autor_nickname}</div>
@@ -418,20 +405,15 @@
             </div>
             <div style="display: inline-flex; gap: 5px;">
               <button class="btn btn-laranja" onclick="editarComentario(${dados.comentario.id})" title="Editar comentário">✏️</button>
-              <button class="btn btn-perigo" onclick="excluirComentario(${dados.comentario.id})" title="Excluir comentário">🗑</button>
+              <button class="btn btn-perigo" onclick="excluirComentario(${dados.comentario.id}, ${receitaId})" title="Excluir comentário">🗑</button>
             </div>
           `;
           lista.appendChild(novoItem);
 
-          // CORREÇÃO 2: Atualizar o número de comentários no balãozinho
-          const cardReceita = document.querySelector(`.card-receita[data-id="${receitaId}"]`);
-          const btnComentar = cardReceita.querySelector(".btn-comentar");
-          
-          if (btnComentar) {
-            // Pega o número atual, converte para inteiro e soma 1
-            let textoBotao = btnComentar.textContent.replace('💬', '').trim();
-            let totalAtual = parseInt(textoBotao) || 0;
-            btnComentar.textContent = `💬 ${totalAtual + 1}`;
+          // 🔴 AJUSTE: Usando a resposta do backend pra atualizar o balão certinho!
+          const balao = document.getElementById(`balao-comentarios-${receitaId}`);
+          if (balao) {
+            balao.innerText = dados.total_comentarios;
           }
         }
       } catch (e) {
@@ -442,13 +424,11 @@
 
     // ─── Editar comentário ─────────────────────────────────────────────────
     async function editarComentario(comentarioId) {
-      // Pega o texto atual direto do elemento HTML
       const elementoTexto = document.querySelector(`#comentario-${comentarioId} .comentario-texto`);
       const textoAtual = elementoTexto.textContent;
       
       const novoTexto = prompt("Edite seu comentário:", textoAtual);
       
-      // Se o usuário cancelar ou deixar vazio/igual, não faz nada
       if (novoTexto === null || novoTexto.trim() === "" || novoTexto.trim() === textoAtual) return;
 
       try {
@@ -461,7 +441,6 @@
         const dados = await resposta.json();
 
         if (resposta.ok) {
-          // Atualiza o texto na tela sem precisar recarregar a página
           elementoTexto.textContent = novoTexto.trim();
         } else {
           alert(dados.erro || "Erro ao editar comentário.");
@@ -472,24 +451,31 @@
     }
 
 
-    // ─── Excluir comentário ────────────────────────────────────────────────
-    async function excluirComentario(comentarioId) {
-      if (!confirm("Tem certeza que deseja excluir este comentário?")) return;
+   // ─── Excluir comentário ────────────────────────────────────────────────
+   async function excluirComentario(comentarioId, receitaId) { 
+     if (!confirm("Tem certeza que deseja excluir este comentário?")) return;
 
-      try {
-        const resposta = await fetch(`/comentario/${comentarioId}`, { method: "DELETE" });
-        const dados    = await resposta.json();
+     try {
+       const resposta = await fetch(`/comentario/${comentarioId}`, { method: "DELETE" });
+       const dados    = await resposta.json();
 
-        if (resposta.ok) {
-          const el = document.getElementById(`comentario-${comentarioId}`);
-          if (el) el.remove();
-        } else {
-          alert(dados.erro || "Erro ao excluir comentário.");
-        }
-      } catch (e) {
-        console.error("Erro ao excluir:", e);
-      }
-    }
+       if (resposta.ok) {
+         const el = document.getElementById(`comentario-${comentarioId}`);
+         if (el) el.remove();
+
+         // 🔴 AJUSTE: Agora ele vai achar o balão porque o HTML tem o ID certo!
+         const balao = document.getElementById(`balao-comentarios-${receitaId}`);
+         if (balao) {
+             balao.innerText = dados.total_comentarios; 
+         }
+
+       } else {
+         alert(dados.erro || "Erro ao excluir comentário.");
+       }
+     } catch (e) {
+       console.error("Erro ao excluir:", e);
+     }
+   }
 
   </script>
 </body>

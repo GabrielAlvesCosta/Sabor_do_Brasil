@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "titulo": "Feijoada",
+        "descricao": "A cl\u00e1ssica feijoada brasileira com carnes selecionadas.",
+        "imagem": "\ud83c\udf72",
+        "curtidas": [],
+        "comentarios": []
+    },
+    {
+        "id": 2,
+        "titulo": "P\u00e3o de Queijo",
+        "descricao": "Tradicional receita mineira, crocante por fora e macio por dentro.",
+        "imagem": "\ud83e\uddc0",
+        "curtidas": [],
+        "comentarios": []
+    },
+    {
+        "id": 3,
+        "titulo": "Brigadeiro",
+        "descricao": "O doce mais amado do Brasil, feito com chocolate e leite condensado.",
+        "imagem": "\ud83c\udf6b",
+        "curtidas": [],
+        "comentarios": []
+    }
+]

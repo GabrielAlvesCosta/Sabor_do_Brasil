@@ -29,6 +29,30 @@
       "nickname": "d",
       "senha": "$2b$12$iuGgF..KS7oXPtk67SClA.Q/jFtZOCpN0nmYdkUFbT/1NEXDZc5IW",
       "perfil": "admin"
+    },
+    {
+      "id": 6,
+      "nickname": "a",
+      "senha": "$2b$12$LCZxPPq.d0FLecTDH0W7WeiKGbXH3eBIAMvXvD1A3.6W8z9YEqB4S",
+      "perfil": "admin"
+    },
+    {
+      "id": 7,
+      "nickname": "e",
+      "senha": "$2b$12$754KgsipX7yaUK.Sm9nzU.QIvUrwEjZurA8g66rWT.x9WwEDUmPp2",
+      "perfil": "comum"
+    },
+    {
+      "id": 8,
+      "nickname": "f",
+      "senha": "$2b$12$u9EKaDc1WeCSdBUgJsoXSewj/7L9HLHhj9tk1OAIjbQibLE7/jo86",
+      "perfil": "admin"
+    },
+    {
+      "id": 9,
+      "nickname": "z",
+      "senha": "$2b$12$YFkI0HKh2/rNdEohWoQ91e/6OOLgQLQu/2UoALBSe.lX4kNXtsiaK",
+      "perfil": "comum"
     }
   ],
   "receitas": [
@@ -38,7 +62,9 @@
       "descricao": "A mais tradicional feijoada brasileira, com feijão preto, carnes defumadas e acompanhamentos clássicos.",
       "imagem": "🍲",
       "curtidas": [
-        "b"
+        "b",
+        "a",
+        "z"
       ],
       "comentarios": [
         {
@@ -54,22 +80,16 @@
           "texto": "d"
         },
         {
-          "id": 10,
-          "autor_id": 3,
-          "autor_nickname": "b",
-          "texto": "b"
-        },
-        {
           "id": 11,
           "autor_id": 4,
           "autor_nickname": "c",
           "texto": "c"
         },
         {
-          "id": 13,
-          "autor_id": 3,
-          "autor_nickname": "b",
-          "texto": "a"
+          "id": 24,
+          "autor_id": 9,
+          "autor_nickname": "z",
+          "texto": "z"
         }
       ]
     },
@@ -79,31 +99,15 @@
       "descricao": "Salgado recheado com frango desfiado temperado, empanado e frito até a perfeição dourada.",
       "imagem": "🍗",
       "curtidas": [
-        "b"
+        "b",
+        "a",
+        "z"
       ],
       "comentarios": [
         {
-          "id": 5,
-          "autor_id": 4,
-          "autor_nickname": "c",
-          "texto": "c"
-        },
-        {
-          "id": 6,
-          "autor_id": 4,
-          "autor_nickname": "c",
-          "texto": "c"
-        },
-        {
-          "id": 9,
-          "autor_id": 3,
-          "autor_nickname": "b",
-          "texto": "b"
-        },
-        {
-          "id": 14,
-          "autor_id": 3,
-          "autor_nickname": "b",
+          "id": 23,
+          "autor_id": 6,
+          "autor_nickname": "a",
           "texto": "a"
         }
       ]
@@ -114,15 +118,11 @@
       "descricao": "O clássico docinho brasileiro em versão premium, com chocolate belga e cobertura artesanal.",
       "imagem": "🍫",
       "curtidas": [
-        "b"
+        "b",
+        "a",
+        "z"
       ],
       "comentarios": [
-        {
-          "id": 1,
-          "autor_id": 3,
-          "autor_nickname": "b",
-          "texto": "d"
-        },
         {
           "id": 3,
           "autor_id": 4,
@@ -144,6 +144,6 @@
       ]
     }
   ],
-  "proximo_comentario_id": 15,
-  "proximo_usuario_id": 6
+  "proximo_comentario_id": 25,
+  "proximo_usuario_id": 10
 }
