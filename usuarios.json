@@ -11,6 +11,24 @@
       "nickname": "maria_chef",
       "senha": "$2b$12$KvdVuiY9S.bqkCEP6.cETOJ.iK0UDXkW3p9n.uYVQKqdizRz3C3Ci",
       "perfil": "comum"
+    },
+    {
+      "id": 3,
+      "nickname": "b",
+      "senha": "$2b$12$Em4M/8GFIzM8WfiXhb3j.elpc6HBD7SLn1eEi17eswoGNGF4riL9i",
+      "perfil": "comum"
+    },
+    {
+      "id": 4,
+      "nickname": "c",
+      "senha": "$2b$12$B1ssU.RPm3Sawn3B10TAiORpixETYewlk64NnCbz6iT5m82caa99q",
+      "perfil": "comum"
+    },
+    {
+      "id": 5,
+      "nickname": "d",
+      "senha": "$2b$12$iuGgF..KS7oXPtk67SClA.Q/jFtZOCpN0nmYdkUFbT/1NEXDZc5IW",
+      "perfil": "admin"
     }
   ],
   "receitas": [
@@ -19,26 +37,113 @@
       "titulo": "Feijoada Completa",
       "descricao": "A mais tradicional feijoada brasileira, com feijão preto, carnes defumadas e acompanhamentos clássicos.",
       "imagem": "🍲",
-      "curtidas": [],
-      "comentarios": []
+      "curtidas": [
+        "b"
+      ],
+      "comentarios": [
+        {
+          "id": 7,
+          "autor_id": 4,
+          "autor_nickname": "c",
+          "texto": "d"
+        },
+        {
+          "id": 8,
+          "autor_id": 5,
+          "autor_nickname": "d",
+          "texto": "d"
+        },
+        {
+          "id": 10,
+          "autor_id": 3,
+          "autor_nickname": "b",
+          "texto": "b"
+        },
+        {
+          "id": 11,
+          "autor_id": 4,
+          "autor_nickname": "c",
+          "texto": "c"
+        },
+        {
+          "id": 13,
+          "autor_id": 3,
+          "autor_nickname": "b",
+          "texto": "a"
+        }
+      ]
     },
     {
       "id": 2,
       "titulo": "Coxinha Crocante",
       "descricao": "Salgado recheado com frango desfiado temperado, empanado e frito até a perfeição dourada.",
       "imagem": "🍗",
-      "curtidas": [],
-      "comentarios": []
+      "curtidas": [
+        "b"
+      ],
+      "comentarios": [
+        {
+          "id": 5,
+          "autor_id": 4,
+          "autor_nickname": "c",
+          "texto": "c"
+        },
+        {
+          "id": 6,
+          "autor_id": 4,
+          "autor_nickname": "c",
+          "texto": "c"
+        },
+        {
+          "id": 9,
+          "autor_id": 3,
+          "autor_nickname": "b",
+          "texto": "b"
+        },
+        {
+          "id": 14,
+          "autor_id": 3,
+          "autor_nickname": "b",
+          "texto": "a"
+        }
+      ]
     },
     {
       "id": 3,
       "titulo": "Brigadeiro Gourmet",
       "descricao": "O clássico docinho brasileiro em versão premium, com chocolate belga e cobertura artesanal.",
       "imagem": "🍫",
-      "curtidas": [],
-      "comentarios": []
+      "curtidas": [
+        "b"
+      ],
+      "comentarios": [
+        {
+          "id": 1,
+          "autor_id": 3,
+          "autor_nickname": "b",
+          "texto": "d"
+        },
+        {
+          "id": 3,
+          "autor_id": 4,
+          "autor_nickname": "c",
+          "texto": "d"
+        },
+        {
+          "id": 4,
+          "autor_id": 5,
+          "autor_nickname": "d",
+          "texto": "d"
+        },
+        {
+          "id": 12,
+          "autor_id": 4,
+          "autor_nickname": "c",
+          "texto": "c"
+        }
+      ]
     }
   ],
-  "proximo_comentario_id": 1,
-  "proximo_usuario_id": 3
+  "proximo_comentario_id": 15,
+  "proximo_usuario_id": 6
 }

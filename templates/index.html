@@ -19,9 +19,6 @@
       {% endif %}
     {% endwith %}
 </div>
-  <!-- ═══════════════════════════════════════════════════
-       HEADER
-  ═══════════════════════════════════════════════════ -->
   <header>
     <a href="/" class="logo">
       <span class="logo-emoji">🍽️</span>
@@ -40,9 +37,6 @@
     </div>
   </header>
 
-  <!-- ═══════════════════════════════════════════════════
-       CONTEÚDO PRINCIPAL
-  ═══════════════════════════════════════════════════ -->
   <main>
     <h1 class="secao-titulo">Receitas em Destaque 🇧🇷</h1>
     <p class="secao-subtitulo">Explore, curta e comente as melhores receitas brasileiras.</p>
@@ -58,7 +52,6 @@
           <p class="card-descricao">{{ receita.descricao }}</p>
 
           <div class="card-acoes">
-            <!-- Botão Curtir -->
             <button
               class="btn-curtir {% if usuario and usuario.nickname in receita.curtidas %}ativo{% endif %}"
               onclick="curtir({{ receita.id }}, this)"
@@ -67,7 +60,6 @@
               ❤️ <span class="contador-curtida">{{ receita.curtidas | length }}</span>
             </button>
 
-            <!-- Botão Comentar (toggle) -->
             <button
               class="btn-comentar"
               onclick="toggleComentarios({{ receita.id }})"
@@ -77,9 +69,7 @@
           </div>
         </div>
 
-        <!-- Seção de Comentários -->
         <div class="secao-comentarios" id="comentarios-{{ receita.id }}">
-          <!-- Formulário de novo comentário -->
           <div class="form-comentario">
             <input
               type="text"
@@ -92,7 +82,6 @@
             </button>
           </div>
 
-          <!-- Lista de comentários existentes -->
           <div class="lista-comentarios" id="lista-{{ receita.id }}">
             {% for comentario in receita.comentarios %}
             <div class="item-comentario" id="comentario-{{ comentario.id }}">
@@ -101,6 +90,14 @@
                 <div class="comentario-texto">{{ comentario.texto }}</div>
               </div>
               {% if usuario and (usuario.perfil == 'admin' or usuario.id == comentario.autor_id) %}
+              <div style="display: inline-flex; gap: 5px;">
+                <button
+                  class="btn btn-laranja"
+                  onclick="editarComentario({{ comentario.id }})"
+                  title="Editar comentário"
+                >
+                  ✏️
+                </button>
               <button
                 class="btn btn-perigo"
                 onclick="excluirComentario({{ comentario.id }})"
@@ -108,6 +105,7 @@
               >
                 🗑
               </button>
+              </div>
               {% endif %}
             </div>
             {% endfor %}
@@ -120,10 +118,6 @@
   </main>
 
 
-  <!-- ═══════════════════════════════════════════════════
-       MODAL DE LOGIN / CADASTRO
-       (Dispara automaticamente ao tentar curtir/comentar sem login)
-  ═══════════════════════════════════════════════════ -->
   <div class="modal-overlay" id="modal-overlay" onclick="fecharModalAoClicarFora(event)">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
 
@@ -132,13 +126,11 @@
         <button class="btn-fechar-modal" onclick="fecharModal()" aria-label="Fechar modal">✕</button>
       </div>
 
-      <!-- Tabs: Login / Cadastro -->
       <div class="tabs" role="tablist">
         <button class="tab ativa" id="tab-login"    onclick="trocarTab('login')"    role="tab">Entrar</button>
         <button class="tab"       id="tab-cadastro" onclick="trocarTab('cadastro')" role="tab">Cadastrar</button>
       </div>
 
-      <!-- ── PAINEL LOGIN ────────────────────── -->
       <div class="painel-form ativo" id="painel-login">
         <div class="grupo-campo">
           <label for="login-nickname">Nickname</label>
@@ -150,7 +142,6 @@
                  onkeydown="if(event.key==='Enter') submeterLogin()" />
         </div>
 
-        <!-- Mensagem de erro do login -->
         <div class="msg-erro" id="erro-login">
           ⚠️ <span id="texto-erro-login"></span>
         </div>
@@ -158,7 +149,6 @@
         <button class="btn-submit-modal" onclick="submeterLogin()">Entrar</button>
       </div>
 
-      <!-- ── PAINEL CADASTRO ─────────────────── -->
       <div class="painel-form" id="painel-cadastro">
         <div class="grupo-campo">
           <label for="cadastro-nickname">Nickname</label>
@@ -169,7 +159,13 @@
           <input type="password" id="cadastro-senha" placeholder="••••••••" autocomplete="new-password" />
         </div>
 
-        <!-- Mensagem de erro/sucesso do cadastro -->
+        <div class="grupo-campo">
+          <label>Tipo de Perfil</label>
+          <div style="display: flex; gap: 15px; margin-top: 5px;">
+            <label><input type="radio" name="cadastro-perfil" value="comum" checked> Comum</label>
+            <label><input type="radio" name="cadastro-perfil" value="admin"> Admin</label>
+          </div>
+
         <div class="msg-erro"    id="erro-cadastro"><span id="texto-erro-cadastro"></span></div>
         <div class="msg-sucesso" id="sucesso-cadastro"></div>
 
@@ -180,9 +176,6 @@
   </div>
 
 
-  <!-- ═══════════════════════════════════════════════════
-       JAVASCRIPT — LÓGICA DO FRONT-END
-  ═══════════════════════════════════════════════════ -->
   <script>
     // ─── Estado da sessão (sincronizado com Flask) ──────────────────────────
     let usuarioAtual = {{ usuario | tojson }};
@@ -261,13 +254,16 @@
       const senha    = document.getElementById("login-senha").value.trim();
 
       // ===================== TODO (FRONTEND) =====================
-      // TAREFA: Implemente a exibição de erros visuais
-      //
-      // Se os campos estiverem vazios, adicione a classe "campo-erro"
-      // nos inputs correspondentes. Exemplo:
-      //   document.getElementById("login-nickname").classList.add("campo-erro");
-      //
-      // A classe "campo-erro" deve ser estilizada no CSS com borda vermelha.
+      let temErro = false;
+      if (!nickname) {
+        document.getElementById("login-nickname").classList.add("campo-erro");
+        temErro = true;
+      }
+      if (!senha) {
+        document.getElementById("login-senha").classList.add("campo-erro");
+        temErro = true;
+      }
+      if (temErro) return; // Interrompe se houver campos vazios
       // ===========================================================
 
       try {
@@ -281,11 +277,10 @@
 
         if (!resposta.ok) {
           // ===================== TODO (FRONTEND) =====================
-          // TAREFA: Exiba a mensagem de erro e aplique borda vermelha
-          //
-          // 1. Mostre dados.erro no elemento #texto-erro-login
-          // 2. Adicione a classe "visivel" em #erro-login
-          // 3. Adicione a classe "campo-erro" nos dois inputs de login
+          document.getElementById("texto-erro-login").textContent = dados.erro;
+          document.getElementById("erro-login").classList.add("visivel");
+          document.getElementById("login-nickname").classList.add("campo-erro");
+          document.getElementById("login-senha").classList.add("campo-erro");
           // ===========================================================
           console.error("Erro no login:", dados.erro);
           return;
@@ -309,24 +304,23 @@
 
       const nickname = document.getElementById("cadastro-nickname").value.trim();
       const senha    = document.getElementById("cadastro-senha").value.trim();
+      const perfil   = document.querySelector('input[name="cadastro-perfil"]:checked').value;
 
       try {
         const resposta = await fetch("/cadastrar", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ nickname, senha })
+          body: JSON.stringify({ nickname, senha, perfil })
         });
 
         const dados = await resposta.json();
 
         if (!resposta.ok) {
           // ===================== TODO (FRONTEND) =====================
-          // TAREFA: Exiba a mensagem de erro e aplique borda vermelha
-          //
-          // 1. Mostre dados.erro no elemento #texto-erro-cadastro
-          // 2. Adicione a classe "visivel" em #erro-cadastro
-          // 3. Adicione "campo-erro" no campo de nickname e/ou senha
-          //    conforme o tipo de erro
+          document.getElementById("texto-erro-cadastro").textContent = dados.erro;
+          document.getElementById("erro-cadastro").classList.add("visivel");
+          document.getElementById("cadastro-nickname").classList.add("campo-erro");
+          document.getElementById("cadastro-senha").classList.add("campo-erro");
           // ===========================================================
           console.error("Erro no cadastro:", dados.erro);
           return;
@@ -359,11 +353,7 @@
     async function curtir(receitaId, botao) {
       if (!usuarioAtual) {
         // ===================== TODO (FRONTEND) =====================
-        // TAREFA: Dispare o modal de login automaticamente
-        //
-        // Quando um usuário não logado tenta curtir,
-        // o modal deve abrir na aba de login.
-        // Use a função abrirModal("login") aqui.
+        abrirModal("login");
         // ===========================================================
         return;
       }
@@ -386,8 +376,7 @@
     function toggleComentarios(receitaId) {
       if (!usuarioAtual) {
         // ===================== TODO (FRONTEND) =====================
-        // TAREFA: Dispare o modal de login automaticamente
-        // (mesma lógica do curtir)
+        abrirModal("login");
         // ===========================================================
         return;
       }
@@ -415,20 +404,70 @@
         if (resposta.ok) {
           input.value = "";
           const lista = document.getElementById(`lista-${receitaId}`);
+          
+          // Cria o novo elemento na tela dinamicamente
           const novoItem = document.createElement("div");
           novoItem.classList.add("item-comentario");
           novoItem.id = `comentario-${dados.comentario.id}`;
+          
+          // CORREÇÃO 1: Adicionado o botão de editar junto com o de excluir
           novoItem.innerHTML = `
             <div>
               <div class="comentario-autor">@${dados.comentario.autor_nickname}</div>
               <div class="comentario-texto">${dados.comentario.texto}</div>
             </div>
-            <button class="btn btn-perigo" onclick="excluirComentario(${dados.comentario.id})" title="Excluir comentário">🗑</button>
+            <div style="display: inline-flex; gap: 5px;">
+              <button class="btn btn-laranja" onclick="editarComentario(${dados.comentario.id})" title="Editar comentário">✏️</button>
+              <button class="btn btn-perigo" onclick="excluirComentario(${dados.comentario.id})" title="Excluir comentário">🗑</button>
+            </div>
           `;
           lista.appendChild(novoItem);
+
+          // CORREÇÃO 2: Atualizar o número de comentários no balãozinho
+          const cardReceita = document.querySelector(`.card-receita[data-id="${receitaId}"]`);
+          const btnComentar = cardReceita.querySelector(".btn-comentar");
+          
+          if (btnComentar) {
+            // Pega o número atual, converte para inteiro e soma 1
+            let textoBotao = btnComentar.textContent.replace('💬', '').trim();
+            let totalAtual = parseInt(textoBotao) || 0;
+            btnComentar.textContent = `💬 ${totalAtual + 1}`;
+          }
         }
       } catch (e) {
         console.error("Erro ao comentar:", e);
+      }
+    }
+
+
+    // ─── Editar comentário ─────────────────────────────────────────────────
+    async function editarComentario(comentarioId) {
+      // Pega o texto atual direto do elemento HTML
+      const elementoTexto = document.querySelector(`#comentario-${comentarioId} .comentario-texto`);
+      const textoAtual = elementoTexto.textContent;
+      
+      const novoTexto = prompt("Edite seu comentário:", textoAtual);
+      
+      // Se o usuário cancelar ou deixar vazio/igual, não faz nada
+      if (novoTexto === null || novoTexto.trim() === "" || novoTexto.trim() === textoAtual) return;
+
+      try {
+        const resposta = await fetch(`/comentario/${comentarioId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ texto: novoTexto.trim() })
+        });
+        
+        const dados = await resposta.json();
+
+        if (resposta.ok) {
+          // Atualiza o texto na tela sem precisar recarregar a página
+          elementoTexto.textContent = novoTexto.trim();
+        } else {
+          alert(dados.erro || "Erro ao editar comentário.");
+        }
+      } catch (e) {
+        console.error("Erro ao editar:", e);
       }
     }
 

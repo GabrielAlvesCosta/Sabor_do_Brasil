@@ -32,6 +32,7 @@ from flask import Flask, render_template, request, jsonify, session
 # ─── Importações de segurança ─────────────────────────────────────────────────
 # O módulo bcrypt fornece funções de hash seguro para senhas.
 # Documentação: https://pypi.org/project/bcrypt/
+import bcrypt
 from bcrypt import hashpw, checkpw
 
 app = Flask(__name__)
@@ -106,13 +107,10 @@ def hash_senha(senha_texto_puro: str) -> str:
         3. Decodifique o resultado para string com: .decode("utf-8")
     """
     # ===================== TODO =====================
-    # IMPLEMENTE A LÓGICA DE HASH AQUI
-    # Passos:
-    #   1. Converta senha_texto_puro para bytes
-    #   2. Gere o hash com bcrypt.hashpw()
-    #   3. Retorne o hash como string (decodifique com .decode("utf-8"))
+    senha_bytes = senha_texto_puro.encode("utf-8")
+    hash_bytes = bcrypt.hashpw(senha_bytes, bcrypt.gensalt())
+    return hash_bytes.decode("utf-8")
     # =================================================
-    pass  # Remova este "pass" após implementar
 
 
 def verificar_senha(senha_texto_puro: str, senha_hash: str) -> bool:
@@ -139,13 +137,10 @@ def verificar_senha(senha_texto_puro: str, senha_hash: str) -> bool:
         3. Use bcrypt.checkpw(senha_bytes, hash_bytes) — retorna bool
     """
     # ===================== TODO =====================
-    # IMPLEMENTE A VERIFICAÇÃO DE SENHA AQUI
-    # Passos:
-    #   1. Converta ambas as variáveis para bytes
-    #   2. Use bcrypt.checkpw() para comparar
-    #   3. Retorne o resultado booleano
+    senha_bytes = senha_texto_puro.encode("utf-8")
+    hash_bytes = senha_hash.encode("utf-8")
+    return checkpw(senha_bytes, hash_bytes)
     # =================================================
-    pass  # Remova este "pass" após implementar
 
 
 # =============================================================================
@@ -174,14 +169,13 @@ def usuario_pode_editar(id_usuario_acao: int, id_autor_comentario: int) -> bool:
         3. OU verifique se id_usuario_acao == id_autor_comentario
     """
     # ===================== TODO =====================
-    # IMPLEMENTE A LÓGICA DE PERFIL AQUI
-    # Passos:
-    #   1. Chame ler_dados() para obter os dados
-    #   2. Encontre o usuário pelo id_usuario_acao
-    #   3. Retorne True se for admin OU se for o próprio autor
-    #   4. Retorne False em todos os outros casos
+    dados = ler_dados()
+    for usuario in dados.get("usuarios", []):
+        if usuario["id"] == id_usuario_acao:
+            if usuario["perfil"] == "admin" or id_usuario_acao == id_autor_comentario:
+                return True
+    return False
     # =================================================
-    pass  # Remova este "pass" após implementar
 
 
 # =============================================================================
@@ -210,10 +204,14 @@ def cadastrar():
     corpo = request.get_json()
     nickname = corpo.get("nickname", "").strip()
     senha = corpo.get("senha", "").strip()
+    perfil = corpo.get("perfil", "comum").strip()
 
     # Validação básica dos campos
     if not nickname or not senha:
         return jsonify({"erro": "Preencha todos os campos"}), 400
+
+    if perfil not in ["comum", "admin"]:
+        return jsonify({"erro": "Perfil inválido"}), 400
 
     dados = ler_dados()
 
@@ -223,20 +221,22 @@ def cadastrar():
             return jsonify({"erro": "Nickname já está em uso"}), 409
 
     # ===================== TODO =====================
-    # COMPLETE O CADASTRO AQUI
-    # Passos:
-    #   1. Use hash_senha(senha) para gerar o hash da senha
-    #   2. Crie um dicionário novo_usuario com os campos:
-    #      - "id": dados["proximo_usuario_id"]
-    #      - "nickname": nickname
-    #      - "senha": o hash gerado (NÃO a senha em texto puro!)
-    #      - "perfil": "comum"
-    #   3. Adicione novo_usuario em dados["usuarios"]
-    #   4. Incremente dados["proximo_usuario_id"] em 1
-    #   5. Chame salvar_dados(dados) para persistir
-    #   6. Retorne jsonify({"mensagem": "Cadastro realizado com sucesso!"})
+    senha_hash_str = hash_senha(senha)
+    
+    novo_usuario = {
+        "id": dados["proximo_usuario_id"],
+        "nickname": nickname,
+        "senha": senha_hash_str,
+        "perfil": perfil
+    }
+    
+    dados["usuarios"].append(novo_usuario)
+    dados["proximo_usuario_id"] += 1
+    
+    salvar_dados(dados)
+    
+    return jsonify({"mensagem": "Cadastro realizado com sucesso!"})
     # =================================================
-    pass  # Remova este "pass" após implementar
 
 
 @app.route("/login", methods=["POST"])
@@ -266,27 +266,20 @@ def login():
             break
 
     # ===================== TODO =====================
-    # IMPLEMENTE A VALIDAÇÃO DE LOGIN AQUI
-    # Passos:
-    #   1. Se usuario_encontrado for None → retorne erro 401
-    #      com {"erro": "Usuário ou senha incorreto"}
-    #
-    #   2. Use verificar_senha(senha, usuario_encontrado["senha"])
-    #      para checar a senha
-    #
-    #   3. Se a senha for INCORRETA → retorne erro 401
-    #      com {"erro": "Usuário ou senha incorreto"}
-    #      (mesma mensagem — não revele qual campo está errado!)
-    #
-    #   4. Se tudo estiver correto:
-    #      a. Salve na sessão: session["usuario"] = {
-    #             "id": usuario_encontrado["id"],
-    #             "nickname": usuario_encontrado["nickname"],
-    #             "perfil": usuario_encontrado["perfil"]
-    #         }
-    #      b. Retorne jsonify({"mensagem": "Login realizado!", "usuario": session["usuario"]})
+    if usuario_encontrado is None:
+        return jsonify({"erro": "Usuário ou senha incorreto"}), 401
+        
+    if not verificar_senha(senha, usuario_encontrado["senha"]):
+        return jsonify({"erro": "Usuário ou senha incorreto"}), 401
+        
+    session["usuario"] = {
+        "id": usuario_encontrado["id"],
+        "nickname": usuario_encontrado["nickname"],
+        "perfil": usuario_encontrado["perfil"]
+    }
+    
+    return jsonify({"mensagem": "Login realizado!", "usuario": session["usuario"]})
     # =================================================
-    pass  # Remova este "pass" após implementar
 
 
 @app.route("/logout", methods=["POST"])
@@ -386,15 +379,13 @@ def excluir_comentario(comentario_id: int):
             if comentario["id"] == comentario_id:
 
                 # ===================== TODO =====================
-                # IMPLEMENTE A VERIFICAÇÃO DE PERMISSÃO AQUI
-                # Passos:
-                #   1. Chame usuario_pode_editar(usuario["id"], comentario["autor_id"])
-                #   2. Se retornar False, retorne erro 403:
-                #      jsonify({"erro": "Sem permissão para excluir este comentário"})
-                #   3. Se retornar True, remova o comentário da lista,
-                #      chame salvar_dados(dados) e retorne sucesso
+                if not usuario_pode_editar(usuario["id"], comentario["autor_id"]):
+                    return jsonify({"erro": "Sem permissão para excluir este comentário"}), 403
+                
+                receita["comentarios"].remove(comentario)
+                salvar_dados(dados)
+                return jsonify({"mensagem": "Comentário excluído com sucesso!"})
                 # =================================================
-                pass  # Remova este "pass" após implementar
 
     return jsonify({"erro": "Comentário não encontrado"}), 404
 
@@ -405,6 +396,40 @@ def status():
     return jsonify({"usuario_logado": session.get("usuario")})
 
 
+@app.route("/comentario/<int:comentario_id>", methods=["PUT"])
+def editar_comentario_rota(comentario_id: int):
+    """
+    Edita o texto de um comentário existente.
+    Reaproveita a validação de permissão de exclusão.
+    """
+    usuario = session.get("usuario")
+    if not usuario:
+        return jsonify({"erro": "Você precisa estar logado"}), 401
+
+    corpo = request.get_json()
+    novo_texto = corpo.get("texto", "").strip()
+
+    if not novo_texto:
+        return jsonify({"erro": "O comentário não pode ficar vazio"}), 400
+
+    dados = ler_dados()
+
+    for receita in dados["receitas"]:
+        for comentario in receita["comentarios"]:
+            if comentario["id"] == comentario_id:
+                
+                # Verifica se tem permissão (mesma regra de exclusão)
+                if not usuario_pode_editar(usuario["id"], comentario["autor_id"]):
+                    return jsonify({"erro": "Sem permissão para editar este comentário"}), 403
+                
+                # Atualiza o texto e salva
+                comentario["texto"] = novo_texto
+                salvar_dados(dados)
+                return jsonify({"mensagem": "Comentário editado com sucesso!"})
+
+    return jsonify({"erro": "Comentário não encontrado"}), 404
+
+
 # =============================================================================
 #   INICIALIZAÇÃO DA APLICAÇÃO
 # =============================================================================
@@ -412,10 +437,5 @@ def status():
 if __name__ == "__main__":
     if not os.path.exists(ARQUIVO_DADOS):
         print(f"[ERRO] Arquivo '{ARQUIVO_DADOS}' não encontrado!")
-        print("Certifique-se de que o arquivo usuarios.json está na mesma pasta que app.py.")
     else:
-        print("=" * 50)
-        print("  Sabor do Brasil — Servidor iniciado!")
-        print("  Acesse: http://127.0.0.1:5000")
-        print("=" * 50)
         app.run(debug=True)
