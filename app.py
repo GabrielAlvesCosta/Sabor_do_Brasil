@@ -437,5 +437,10 @@ def editar_comentario_rota(comentario_id: int):
 if __name__ == "__main__":
     if not os.path.exists(ARQUIVO_DADOS):
         print(f"[ERRO] Arquivo '{ARQUIVO_DADOS}' não encontrado!")
+        print("Certifique-se de que o arquivo usuarios.json está na mesma pasta que app.py.")
     else:
+        print("=" * 50)
+        print("  Sabor do Brasil — Servidor iniciado!")
+        print("  Acesse: http://127.0.0.1:5000")
+        print("=" * 50)
         app.run(debug=True)
