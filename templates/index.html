@@ -90,6 +90,14 @@
                 <div class="comentario-texto">{{ comentario.texto }}</div>
               </div>
               {% if usuario and (usuario.perfil == 'admin' or usuario.id == comentario.autor_id) %}
+              <div style="display: inline-flex; gap: 5px;">
+                <button
+                  class="btn btn-laranja"
+                  onclick="editarComentario({{ comentario.id }})"
+                  title="Editar comentário"
+                >
+                  ✏️
+                </button>
               <button
                 class="btn btn-perigo"
                 onclick="excluirComentario({{ comentario.id }})"
@@ -97,6 +105,7 @@
               >
                 🗑
               </button>
+              </div>
               {% endif %}
             </div>
             {% endfor %}
@@ -149,6 +158,13 @@
           <label for="cadastro-senha">Senha</label>
           <input type="password" id="cadastro-senha" placeholder="••••••••" autocomplete="new-password" />
         </div>
+
+        <div class="grupo-campo">
+          <label>Tipo de Perfil</label>
+          <div style="display: flex; gap: 15px; margin-top: 5px;">
+            <label><input type="radio" name="cadastro-perfil" value="comum" checked> Comum</label>
+            <label><input type="radio" name="cadastro-perfil" value="admin"> Admin</label>
+          </div>
 
         <div class="msg-erro"    id="erro-cadastro"><span id="texto-erro-cadastro"></span></div>
         <div class="msg-sucesso" id="sucesso-cadastro"></div>
@@ -288,12 +304,13 @@
 
       const nickname = document.getElementById("cadastro-nickname").value.trim();
       const senha    = document.getElementById("cadastro-senha").value.trim();
+      const perfil   = document.querySelector('input[name="cadastro-perfil"]:checked').value;
 
       try {
         const resposta = await fetch("/cadastrar", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ nickname, senha })
+          body: JSON.stringify({ nickname, senha, perfil })
         });
 
         const dados = await resposta.json();
@@ -387,20 +404,70 @@
         if (resposta.ok) {
           input.value = "";
           const lista = document.getElementById(`lista-${receitaId}`);
+          
+          // Cria o novo elemento na tela dinamicamente
           const novoItem = document.createElement("div");
           novoItem.classList.add("item-comentario");
           novoItem.id = `comentario-${dados.comentario.id}`;
+          
+          // CORREÇÃO 1: Adicionado o botão de editar junto com o de excluir
           novoItem.innerHTML = `
             <div>
               <div class="comentario-autor">@${dados.comentario.autor_nickname}</div>
               <div class="comentario-texto">${dados.comentario.texto}</div>
             </div>
-            <button class="btn btn-perigo" onclick="excluirComentario(${dados.comentario.id})" title="Excluir comentário">🗑</button>
+            <div style="display: inline-flex; gap: 5px;">
+              <button class="btn btn-laranja" onclick="editarComentario(${dados.comentario.id})" title="Editar comentário">✏️</button>
+              <button class="btn btn-perigo" onclick="excluirComentario(${dados.comentario.id})" title="Excluir comentário">🗑</button>
+            </div>
           `;
           lista.appendChild(novoItem);
+
+          // CORREÇÃO 2: Atualizar o número de comentários no balãozinho
+          const cardReceita = document.querySelector(`.card-receita[data-id="${receitaId}"]`);
+          const btnComentar = cardReceita.querySelector(".btn-comentar");
+          
+          if (btnComentar) {
+            // Pega o número atual, converte para inteiro e soma 1
+            let textoBotao = btnComentar.textContent.replace('💬', '').trim();
+            let totalAtual = parseInt(textoBotao) || 0;
+            btnComentar.textContent = `💬 ${totalAtual + 1}`;
+          }
         }
       } catch (e) {
         console.error("Erro ao comentar:", e);
+      }
+    }
+
+
+    // ─── Editar comentário ─────────────────────────────────────────────────
+    async function editarComentario(comentarioId) {
+      // Pega o texto atual direto do elemento HTML
+      const elementoTexto = document.querySelector(`#comentario-${comentarioId} .comentario-texto`);
+      const textoAtual = elementoTexto.textContent;
+      
+      const novoTexto = prompt("Edite seu comentário:", textoAtual);
+      
+      // Se o usuário cancelar ou deixar vazio/igual, não faz nada
+      if (novoTexto === null || novoTexto.trim() === "" || novoTexto.trim() === textoAtual) return;
+
+      try {
+        const resposta = await fetch(`/comentario/${comentarioId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ texto: novoTexto.trim() })
+        });
+        
+        const dados = await resposta.json();
+
+        if (resposta.ok) {
+          // Atualiza o texto na tela sem precisar recarregar a página
+          elementoTexto.textContent = novoTexto.trim();
+        } else {
+          alert(dados.erro || "Erro ao editar comentário.");
+        }
+      } catch (e) {
+        console.error("Erro ao editar:", e);
       }
     }
 

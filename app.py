@@ -204,10 +204,14 @@ def cadastrar():
     corpo = request.get_json()
     nickname = corpo.get("nickname", "").strip()
     senha = corpo.get("senha", "").strip()
+    perfil = corpo.get("perfil", "comum").strip()
 
     # Validação básica dos campos
     if not nickname or not senha:
         return jsonify({"erro": "Preencha todos os campos"}), 400
+
+    if perfil not in ["comum", "admin"]:
+        return jsonify({"erro": "Perfil inválido"}), 400
 
     dados = ler_dados()
 
@@ -223,7 +227,7 @@ def cadastrar():
         "id": dados["proximo_usuario_id"],
         "nickname": nickname,
         "senha": senha_hash_str,
-        "perfil": "comum"
+        "perfil": perfil
     }
     
     dados["usuarios"].append(novo_usuario)
@@ -390,6 +394,40 @@ def excluir_comentario(comentario_id: int):
 def status():
     """Rota utilitária — retorna o usuário da sessão atual (útil para debug)."""
     return jsonify({"usuario_logado": session.get("usuario")})
+
+
+@app.route("/comentario/<int:comentario_id>", methods=["PUT"])
+def editar_comentario_rota(comentario_id: int):
+    """
+    Edita o texto de um comentário existente.
+    Reaproveita a validação de permissão de exclusão.
+    """
+    usuario = session.get("usuario")
+    if not usuario:
+        return jsonify({"erro": "Você precisa estar logado"}), 401
+
+    corpo = request.get_json()
+    novo_texto = corpo.get("texto", "").strip()
+
+    if not novo_texto:
+        return jsonify({"erro": "O comentário não pode ficar vazio"}), 400
+
+    dados = ler_dados()
+
+    for receita in dados["receitas"]:
+        for comentario in receita["comentarios"]:
+            if comentario["id"] == comentario_id:
+                
+                # Verifica se tem permissão (mesma regra de exclusão)
+                if not usuario_pode_editar(usuario["id"], comentario["autor_id"]):
+                    return jsonify({"erro": "Sem permissão para editar este comentário"}), 403
+                
+                # Atualiza o texto e salva
+                comentario["texto"] = novo_texto
+                salvar_dados(dados)
+                return jsonify({"mensagem": "Comentário editado com sucesso!"})
+
+    return jsonify({"erro": "Comentário não encontrado"}), 404
 
 
 # =============================================================================
