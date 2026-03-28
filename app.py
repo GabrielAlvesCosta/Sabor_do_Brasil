@@ -430,6 +430,12 @@ def editar_comentario_rota(comentario_id: int):
     return jsonify({"erro": "Comentário não encontrado"}), 404
 
 
+@app.route("/status")
+def status():
+    """Rota utilitária — retorna o usuário da sessão atual (útil para debug)."""
+    return jsonify({"usuario_logado": session.get("usuario")})
+
+
 # =============================================================================
 #   INICIALIZAÇÃO DA APLICAÇÃO
 # =============================================================================
