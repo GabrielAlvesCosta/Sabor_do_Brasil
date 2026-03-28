@@ -29,6 +29,12 @@
       "nickname": "d",
       "senha": "$2b$12$iuGgF..KS7oXPtk67SClA.Q/jFtZOCpN0nmYdkUFbT/1NEXDZc5IW",
       "perfil": "admin"
+    },
+    {
+      "id": 6,
+      "nickname": "a",
+      "senha": "$2b$12$KFPZgB2r4XkfBgW5sIBDEedQh88tPCuU749vzGpRAubVU63NuK8.O",
+      "perfil": "admin"
     }
   ],
   "receitas": [
@@ -38,7 +44,8 @@
       "descricao": "A mais tradicional feijoada brasileira, com feijão preto, carnes defumadas e acompanhamentos clássicos.",
       "imagem": "🍲",
       "curtidas": [
-        "b"
+        "b",
+        "a"
       ],
       "comentarios": [
         {
@@ -73,21 +80,10 @@
       "descricao": "Salgado recheado com frango desfiado temperado, empanado e frito até a perfeição dourada.",
       "imagem": "🍗",
       "curtidas": [
-        "b"
+        "b",
+        "a"
       ],
       "comentarios": [
-        {
-          "id": 5,
-          "autor_id": 4,
-          "autor_nickname": "c",
-          "texto": "c"
-        },
-        {
-          "id": 6,
-          "autor_id": 4,
-          "autor_nickname": "c",
-          "texto": "c"
-        },
         {
           "id": 9,
           "autor_id": 3,
@@ -139,5 +135,5 @@
     }
   ],
   "proximo_comentario_id": 15,
-  "proximo_usuario_id": 6
+  "proximo_usuario_id": 7
 }
