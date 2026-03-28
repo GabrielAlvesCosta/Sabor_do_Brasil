@@ -1,29 +1,8 @@
-import json
 from flask import Blueprint, render_template, request, jsonify, session
+from utils.utils import ler_dados, salvar_dados, usuario_pode_editar
 
 receita_bp = Blueprint("receita", __name__)
 
-# Caminho do arquivo de persistência JSON
-ARQUIVO_DADOS = "usuarios.json"
-
-# --- FUNÇÕES DE ARQUIVO E VALIDAÇÃO ---
-def ler_dados():
-    with open(ARQUIVO_DADOS, "r", encoding="utf-8") as arquivo:
-        return json.load(arquivo)
-
-def salvar_dados(dados):
-    with open(ARQUIVO_DADOS, "w", encoding="utf-8") as arquivo:
-        json.dump(dados, arquivo, indent=2, ensure_ascii=False)
-
-def usuario_pode_editar(id_usuario_acao: int, id_autor_comentario: int) -> bool:
-    dados = ler_dados()
-    for usuario in dados.get("usuarios", []):
-        if usuario["id"] == id_usuario_acao:
-            if usuario["perfil"] == "admin" or id_usuario_acao == id_autor_comentario:
-                return True
-    return False
-
-# --- ROTAS DA APLICAÇÃO ---
 
 @receita_bp.route("/")
 def home():

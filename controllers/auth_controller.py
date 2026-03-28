@@ -1,22 +1,9 @@
-import json
 import bcrypt
 from flask import Blueprint, request, jsonify, session
+from utils.utils import ler_dados, salvar_dados
+
 
 auth_bp = Blueprint("auth", __name__)
-
-# Caminho do arquivo de persistência JSON
-ARQUIVO_DADOS = "usuarios.json"
-
-# --- FUNÇÕES DE ARQUIVO (Mantidas do original para não quebrar o JSON) ---
-def ler_dados():
-    with open(ARQUIVO_DADOS, "r", encoding="utf-8") as arquivo:
-        return json.load(arquivo)
-
-def salvar_dados(dados):
-    with open(ARQUIVO_DADOS, "w", encoding="utf-8") as arquivo:
-        json.dump(dados, arquivo, indent=2, ensure_ascii=False)
-
-# --- ROTAS DE AUTENTICAÇÃO ---
 
 @auth_bp.route("/cadastrar", methods=["POST"])
 def cadastrar():

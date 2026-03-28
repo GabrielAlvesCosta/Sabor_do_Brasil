@@ -65,6 +65,12 @@
       "nickname": "w",
       "senha": "$2b$12$PHruCoUqK80VWyZNo.WnZuI04dzKFa.50.DT.LgnqaK6DJiRGQniy",
       "perfil": "admin"
+    },
+    {
+      "id": 12,
+      "nickname": "zzzz",
+      "senha": "$2b$12$zPoDgqwmmdXC0ej2b6xPBeNoO/7vfHDgntf4bfDV7yH6qEqfYZjMm",
+      "perfil": "comum"
     }
   ],
   "receitas": [
@@ -75,15 +81,10 @@
       "imagem": "🍲",
       "curtidas": [
         "z",
-        "a"
+        "a",
+        "zzzz"
       ],
       "comentarios": [
-        {
-          "id": 26,
-          "autor_id": 3,
-          "autor_nickname": "b",
-          "texto": "aa"
-        },
         {
           "id": 28,
           "autor_id": 11,
@@ -143,6 +144,6 @@
       ]
     }
   ],
-  "proximo_comentario_id": 29,
-  "proximo_usuario_id": 12
+  "proximo_comentario_id": 30,
+  "proximo_usuario_id": 13
 }
