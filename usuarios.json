@@ -101,6 +101,24 @@
       "nickname": "qw",
       "senha": "$2b$12$P4xZl2tvSxr2sw.ERORgeua5yy0WifpgGemKtwLsP3a1fhOtUsmLi",
       "perfil": "admin"
+    },
+    {
+      "id": 18,
+      "nickname": "qqqq",
+      "senha": "$2b$12$Cwlqm2F36JLTK0F1IjKxqOiaZjOJ1InY6.rn24wM/Y2lapeLQWX9W",
+      "perfil": "comum"
+    },
+    {
+      "id": 19,
+      "nickname": "1",
+      "senha": "$2b$12$dGsTB4CGi6.NPNF2a4SULeQ0UCQn/0rXXvM/uelsBtKCMTopZBad6",
+      "perfil": "comum"
+    },
+    {
+      "id": 20,
+      "nickname": "j",
+      "senha": "$2b$12$/xveJZg8Wa7fS.OxFxNH0.vC45DndP7WKkR111VA4waj2o8tB1pla",
+      "perfil": "comum"
     }
   ],
   "receitas": [
@@ -111,14 +129,15 @@
       "imagem": "🍲",
       "curtidas": [
         "z",
-        "zzzz"
+        "zzzz",
+        "1"
       ],
       "comentarios": [
         {
-          "id": 28,
-          "autor_id": 11,
-          "autor_nickname": "w",
-          "texto": "aaaaaaaaaaaaaaaaaaaaaaaaaa"
+          "id": 34,
+          "autor_id": 6,
+          "autor_nickname": "a",
+          "texto": "q"
         }
       ]
     },
@@ -133,10 +152,10 @@
       ],
       "comentarios": [
         {
-          "id": 23,
-          "autor_id": 6,
-          "autor_nickname": "a",
-          "texto": "a"
+          "id": 37,
+          "autor_id": 20,
+          "autor_nickname": "j",
+          "texto": "j"
         }
       ]
     },
@@ -171,6 +190,6 @@
       ]
     }
   ],
-  "proximo_comentario_id": 34,
-  "proximo_usuario_id": 18
+  "proximo_comentario_id": 39,
+  "proximo_usuario_id": 21
 }

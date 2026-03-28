@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify, session
-from utils.utils import ler_dados, salvar_dados, usuario_pode_editar
+from models.repositorio import ler_dados, salvar_dados, usuario_pode_editar
 
 receita_bp = Blueprint("receita", __name__)
 

@@ -1,6 +1,6 @@
-import bcrypt
 from flask import Blueprint, request, jsonify, session
-from utils.utils import ler_dados, salvar_dados, hash_senha, verificar_senha
+from utils.utils import hash_senha, verificar_senha
+from models.repositorio import ler_dados, salvar_dados
 
 
 auth_bp = Blueprint("auth", __name__)
