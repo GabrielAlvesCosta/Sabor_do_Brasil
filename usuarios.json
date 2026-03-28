@@ -63,7 +63,6 @@
       "imagem": "🍲",
       "curtidas": [
         "b",
-        "a",
         "z"
       ],
       "comentarios": [
@@ -84,12 +83,6 @@
           "autor_id": 4,
           "autor_nickname": "c",
           "texto": "c"
-        },
-        {
-          "id": 24,
-          "autor_id": 9,
-          "autor_nickname": "z",
-          "texto": "z"
         }
       ]
     },
@@ -99,16 +92,21 @@
       "descricao": "Salgado recheado com frango desfiado temperado, empanado e frito até a perfeição dourada.",
       "imagem": "🍗",
       "curtidas": [
-        "b",
-        "a",
-        "z"
+        "z",
+        "b"
       ],
       "comentarios": [
         {
-          "id": 23,
+          "id": 25,
           "autor_id": 6,
           "autor_nickname": "a",
-          "texto": "a"
+          "texto": "aaa"
+        },
+        {
+          "id": 26,
+          "autor_id": 3,
+          "autor_nickname": "b",
+          "texto": "aa"
         }
       ]
     },
@@ -119,7 +117,6 @@
       "imagem": "🍫",
       "curtidas": [
         "b",
-        "a",
         "z"
       ],
       "comentarios": [
@@ -144,6 +141,6 @@
       ]
     }
   ],
-  "proximo_comentario_id": 25,
+  "proximo_comentario_id": 27,
   "proximo_usuario_id": 10
 }
