@@ -1,6 +1,6 @@
 import bcrypt
 from flask import Blueprint, request, jsonify, session
-from utils.utils import ler_dados, salvar_dados
+from utils.utils import ler_dados, salvar_dados, hash_senha, verificar_senha
 
 
 auth_bp = Blueprint("auth", __name__)
@@ -20,15 +20,11 @@ def cadastrar():
 
     dados = ler_dados()
 
-    # Verifica se o nickname já existe
     for usuario in dados["usuarios"]:
         if usuario["nickname"].lower() == nickname.lower():
             return jsonify({"erro": "Nickname já está em uso"}), 409
 
-    # Criptografia correta usando bcrypt
-    senha_bytes = senha.encode("utf-8")
-    hash_bytes = bcrypt.hashpw(senha_bytes, bcrypt.gensalt())
-    senha_hash_str = hash_bytes.decode("utf-8")
+    senha_hash_str = hash_senha(senha)
 
     novo_usuario = {
         "id": dados["proximo_usuario_id"],
@@ -42,7 +38,7 @@ def cadastrar():
     
     salvar_dados(dados)
 
-    return jsonify({"mensagem": "Cadastro realizado com sucesso!"}), 201
+    return jsonify({"mensagem": "Cadastro realizado com sucesso!"})
 
 
 @auth_bp.route("/login", methods=["POST"])
@@ -66,10 +62,7 @@ def login():
     if usuario_encontrado is None:
         return jsonify({"erro": "Usuário ou senha incorreto"}), 401
 
-    # Verificação correta usando bcrypt
-    senha_bytes = senha.encode("utf-8")
-    hash_bytes = usuario_encontrado["senha"].encode("utf-8")
-    if not bcrypt.checkpw(senha_bytes, hash_bytes):
+    if not verificar_senha(senha, usuario_encontrado["senha"]):
         return jsonify({"erro": "Usuário ou senha incorreto"}), 401
 
     # ==========================================================
@@ -92,4 +85,4 @@ def login():
 @auth_bp.route("/logout", methods=["POST"])
 def logout():
     session.pop("usuario", None)
-    return jsonify({"mensagem": "Logout realizado com sucesso!"}), 200
+    return jsonify({"mensagem": "Logout realizado com sucesso!"})

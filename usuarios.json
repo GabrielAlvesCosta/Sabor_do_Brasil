@@ -83,6 +83,24 @@
       "nickname": "qqq",
       "senha": "$2b$12$LY465oi3B59OqwchUuv0eu3RkjxGhU2.F97KHnMS7lKW73yxpIR3u",
       "perfil": "comum"
+    },
+    {
+      "id": 15,
+      "nickname": "qa",
+      "senha": "$2b$12$0x3IRAfBCqbNDWhB/4btiez5xUuphmtBgWhOqPszxyRSA/SN5/y7K",
+      "perfil": "comum"
+    },
+    {
+      "id": 16,
+      "nickname": "qaa",
+      "senha": "$2b$12$3e2Sf7svR2BiIIqraETBIuE8MhcOR2T..s3.hiXF435H7r5CTq1iy",
+      "perfil": "comum"
+    },
+    {
+      "id": 17,
+      "nickname": "qw",
+      "senha": "$2b$12$P4xZl2tvSxr2sw.ERORgeua5yy0WifpgGemKtwLsP3a1fhOtUsmLi",
+      "perfil": "admin"
     }
   ],
   "receitas": [
@@ -135,7 +153,6 @@
       "imagem": "🍫",
       "curtidas": [
         "b",
-        "a",
         "z"
       ],
       "comentarios": [
@@ -160,6 +177,6 @@
       ]
     }
   ],
-  "proximo_comentario_id": 33,
-  "proximo_usuario_id": 15
+  "proximo_comentario_id": 34,
+  "proximo_usuario_id": 18
 }

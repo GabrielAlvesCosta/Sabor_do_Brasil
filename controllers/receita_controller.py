@@ -87,7 +87,7 @@ def excluir_comentario(comentario_id: int):
                 receita["comentarios"].remove(comentario)
                 salvar_dados(dados)
                 return jsonify({
-                    "mensagem": "Comentário excluído com sucesso!", # <--- VÍRGULA AQUI TAMBÉM!
+                    "mensagem": "Comentário excluído com sucesso!",
                     "total_comentarios": len(receita["comentarios"])
                 }), 200
 
@@ -115,6 +115,6 @@ def editar_comentario_rota(comentario_id: int):
                 
                 comentario["texto"] = novo_texto
                 salvar_dados(dados)
-                return jsonify({"mensagem": "Comentário editado com sucesso!"}), 200
+                return jsonify({"mensagem": "Comentário editado com sucesso!"})
 
     return jsonify({"erro": "Comentário não encontrado"}), 404
