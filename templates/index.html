@@ -175,7 +175,9 @@
     </div>
   </div>
 
-
+<!-- ═══════════════════════════════════════════════════
+       JAVASCRIPT — LÓGICA DO FRONT-END
+  ═══════════════════════════════════════════════════ -->
   <script>
     // ─── Estado da sessão (sincronizado com Flask) ──────────────────────────
     let usuarioAtual = {{ usuario | tojson }};
@@ -410,7 +412,6 @@
           novoItem.classList.add("item-comentario");
           novoItem.id = `comentario-${dados.comentario.id}`;
           
-          // CORREÇÃO 1: Adicionado o botão de editar junto com o de excluir
           novoItem.innerHTML = `
             <div>
               <div class="comentario-autor">@${dados.comentario.autor_nickname}</div>
@@ -423,12 +424,10 @@
           `;
           lista.appendChild(novoItem);
 
-          // CORREÇÃO 2: Atualizar o número de comentários no balãozinho
           const cardReceita = document.querySelector(`.card-receita[data-id="${receitaId}"]`);
           const btnComentar = cardReceita.querySelector(".btn-comentar");
           
           if (btnComentar) {
-            // Pega o número atual, converte para inteiro e soma 1
             let textoBotao = btnComentar.textContent.replace('💬', '').trim();
             let totalAtual = parseInt(textoBotao) || 0;
             btnComentar.textContent = `💬 ${totalAtual + 1}`;
@@ -483,13 +482,11 @@
         if (resposta.ok) {
           const el = document.getElementById(`comentario-${comentarioId}`);
           if (el) {
-            // Acha de qual receita é esse comentário antes de excluí-lo da tela
             const secaoComentarios = el.closest('.secao-comentarios');
             
             // Remove o comentário da tela
             el.remove();
 
-            // Atualiza o número do balãozinho para diminuir 1
             if (secaoComentarios) {
               const receitaId = secaoComentarios.id.split('-')[1];
               const cardReceita = document.querySelector(`.card-receita[data-id="${receitaId}"]`);
