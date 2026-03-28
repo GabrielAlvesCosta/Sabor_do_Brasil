@@ -84,7 +84,7 @@ def cadastrar():
     
     salvar_dados(dados)
 
-    return jsonify({"mensagem": "Cadastro realizado com sucesso!"}), 201
+    return jsonify({"mensagem": "Cadastro realizado com sucesso!"})
 
 
 @auth_bp.route("/login", methods=["POST"])
@@ -128,10 +128,9 @@ def login():
     return jsonify({
         "mensagem": "Login realizado!", 
         "usuario": session["usuario"]
-    }), 200
-
+    })
 
 @auth_bp.route("/logout", methods=["POST"])
 def logout():
     session.pop("usuario", None)
-    return jsonify({"mensagem": "Logout realizado com sucesso!"}), 200
+    return jsonify({"mensagem": "Logout realizado com sucesso!"}),
