@@ -65,10 +65,7 @@ def login():
     if not verificar_senha(senha, usuario_encontrado["senha"]):
         return jsonify({"erro": "Usuário ou senha incorreto"}), 401
 
-    # ==========================================================
-    # CORREÇÃO DA SESSÃO: Limpa sessões velhas e força a gravação
-    # ==========================================================
-    session.clear() 
+
     session["usuario"] = {
         "id": usuario_encontrado["id"],
         "nickname": usuario_encontrado["nickname"],
