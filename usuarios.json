@@ -79,12 +79,6 @@
       ],
       "comentarios": [
         {
-          "id": 24,
-          "autor_id": 9,
-          "autor_nickname": "z",
-          "texto": "z"
-        },
-        {
           "id": 26,
           "autor_id": 3,
           "autor_nickname": "b",
@@ -105,8 +99,8 @@
       "imagem": "🍗",
       "curtidas": [
         "b",
-        "a",
-        "z"
+        "z",
+        "a"
       ],
       "comentarios": [
         {
