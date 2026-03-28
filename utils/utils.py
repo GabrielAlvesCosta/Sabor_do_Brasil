@@ -6,7 +6,7 @@ def ler_dados():
     with open(ARQUIVO_DADOS, "r", encoding="utf-8") as arquivo:
         return json.load(arquivo)
 
-def salvar_dados(dados: dict) -> None:
+def salvar_dados(dados):
     with open(ARQUIVO_DADOS, "w", encoding="utf-8") as arquivo:
         json.dump(dados, arquivo, indent=2, ensure_ascii=False)
 
