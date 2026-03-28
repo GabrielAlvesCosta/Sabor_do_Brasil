@@ -29,6 +29,12 @@
       "nickname": "d",
       "senha": "$2b$12$iuGgF..KS7oXPtk67SClA.Q/jFtZOCpN0nmYdkUFbT/1NEXDZc5IW",
       "perfil": "admin"
+    },
+    {
+      "id": 6,
+      "nickname": "a",
+      "senha": "$2b$12$yQmMV5Nleq8adSi..hphd.NryxqvjpgwIDxevnXEs9BZoYreRTihm",
+      "perfil": "admin"
     }
   ],
   "receitas": [
@@ -38,15 +44,10 @@
       "descricao": "A mais tradicional feijoada brasileira, com feijão preto, carnes defumadas e acompanhamentos clássicos.",
       "imagem": "🍲",
       "curtidas": [
-        "b"
+        "b",
+        "a"
       ],
       "comentarios": [
-        {
-          "id": 7,
-          "autor_id": 4,
-          "autor_nickname": "c",
-          "texto": "d"
-        },
         {
           "id": 8,
           "autor_id": 5,
@@ -64,6 +65,12 @@
           "autor_id": 4,
           "autor_nickname": "c",
           "texto": "c"
+        },
+        {
+          "id": 15,
+          "autor_id": 6,
+          "autor_nickname": "a",
+          "texto": "a"
         }
       ]
     },
@@ -138,6 +145,6 @@
       ]
     }
   ],
-  "proximo_comentario_id": 15,
-  "proximo_usuario_id": 6
+  "proximo_comentario_id": 16,
+  "proximo_usuario_id": 7
 }
